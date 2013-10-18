@@ -1,0 +1,23 @@
+{
+    "name": "ebussola/facebook-ads",
+    "description": "Facebook Ads SDK",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Leonardo Shinagawa",
+            "email": "leonardo@ebussola.com"
+        }
+    ],
+    "autoload" : {
+        "psr-0" : {
+            "ebussola\\facebook\\ads\\" : "src/"
+        }
+    },
+    "require": {
+        "ebussola/facebook-core": "1.0.3",
+        "ebussola/common": "1.0.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.28"
+    }
+}

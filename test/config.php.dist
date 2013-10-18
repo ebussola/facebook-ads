@@ -1,0 +1,8 @@
+<?php
+
+return array(
+    'app_id' => '',
+    'secret' => '',
+    'redirect_uri' => '',
+    'long_access_token' => ''
+);
