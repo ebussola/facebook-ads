@@ -24,7 +24,8 @@ abstract class AbstractSetUp extends PHPUnit_Framework_TestCase {
         $pools = array(
             'account' => new \ebussola\facebook\ads\pool\AccountPool(),
             'campaign' => new \ebussola\facebook\ads\pool\CampaignPool(),
-            'adgroup' => new \ebussola\facebook\ads\pool\AdGroupPool()
+            'adgroup' => new \ebussola\facebook\ads\pool\AdGroupPool(),
+            'creative' => new \ebussola\facebook\ads\pool\CreativePool()
         );
         $this->ads = new \ebussola\facebook\ads\Ads($core, $pools);
     }

@@ -12,9 +12,11 @@ use ebussola\common\pool\Pool;
 use ebussola\facebook\ads\account\AccountFactory;
 use ebussola\facebook\ads\adgroup\AdGroupFactory;
 use ebussola\facebook\ads\campaign\CampaignFactory;
+use ebussola\facebook\ads\creative\CreativeFactory;
 use ebussola\facebook\ads\pool\AccountPool;
 use ebussola\facebook\ads\pool\AdGroupPool;
 use ebussola\facebook\ads\pool\CampaignPool;
+use ebussola\facebook\ads\pool\CreativePool;
 use ebussola\facebook\core\Core;
 
 class Ads {
@@ -47,6 +49,9 @@ class Ads {
         }
         if (!isset($pools['adgroup'])) {
             $pools['adgroup'] = AdGroupPool::getInstance();
+        }
+        if (!isset($pools['creative'])) {
+            $pools['creative'] = CreativePool::getInstance();
         }
 
         $this->pools = $pools;
@@ -204,6 +209,35 @@ class Ads {
         }
 
         return $this->pools['adgroup']->getAllExistents($all_ad_group_ids);
+    }
+
+    /**
+     * @param string[] $creative_ids
+     *
+     * @return array
+     */
+    public function getCreatives($creative_ids) {
+        if (is_array($creative_ids)) {
+            $creative_ids = array_unique($creative_ids);
+        }
+
+        $all_creative_ids = $creative_ids;
+        $request_creative_ids = $this->pools['creative']->getNotHasIds($creative_ids);
+
+        if (count($request_creative_ids) > 0) {
+            $fields = Fields::getCreativeFields();
+
+            $requests = [];
+            foreach ($request_creative_ids as $creative_id) {
+                $requests[] = $this->core->createRequest(array('fields' => $fields), '/' . $creative_id, 'get');
+            }
+
+            $creatives = $this->core->batchRequest($requests);
+            CreativeFactory::createCreative($creatives);
+            $this->pools['creative']->addAll($creatives);
+        }
+
+        return $this->pools['creative']->getAllExistents($all_creative_ids);
     }
 
 }

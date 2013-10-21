@@ -50,4 +50,17 @@ class Fields {
         return $fields;
     }
 
+    /**
+     * @return string
+     */
+    static public function getCreativeFields() {
+        $fields = join(',', array(
+            'name', 'type', 'object_id', 'body', 'image_hash',
+            'image_url', 'title', 'link_url', 'url_tags', 'preview_url',
+            'related_fan_page', 'auto_update', 'story_id', 'action_spec'
+        ));
+
+        return $fields;
+    }
+
 }
