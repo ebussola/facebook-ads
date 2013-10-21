@@ -36,4 +36,18 @@ class Fields {
         return $fields;
     }
 
+    /**
+     * @return string
+     */
+    static public function getAdGroupFields() {
+        $fields = join(',', array(
+            'account_id', 'adgroup_status', 'bid_type',
+            'bid_info', 'campaign_id', 'conversion_specs', 'created_time', 'creative_ids',
+            'disapprove_reason_descriptions', 'last_updated_by_app_id', 'name', 'targeting',
+            'tracking_specs', 'updated_time', 'view_tags'
+        ));
+
+        return $fields;
+    }
+
 }

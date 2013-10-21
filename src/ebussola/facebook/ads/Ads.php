@@ -10,8 +10,10 @@ namespace ebussola\facebook\ads;
 
 use ebussola\common\pool\Pool;
 use ebussola\facebook\ads\account\AccountFactory;
+use ebussola\facebook\ads\adgroup\AdGroupFactory;
 use ebussola\facebook\ads\campaign\CampaignFactory;
 use ebussola\facebook\ads\pool\AccountPool;
+use ebussola\facebook\ads\pool\AdGroupPool;
 use ebussola\facebook\ads\pool\CampaignPool;
 use ebussola\facebook\core\Core;
 
@@ -42,6 +44,9 @@ class Ads {
         }
         if (!isset($pools['campaign'])) {
             $pools['campaign'] = CampaignPool::getInstance();
+        }
+        if (!isset($pools['adgroup'])) {
+            $pools['adgroup'] = AdGroupPool::getInstance();
         }
 
         $this->pools = $pools;
@@ -137,6 +142,67 @@ class Ads {
         }
 
         return $this->pools['campaign']->getAllExistents($all_campaign_ids);
+    }
+
+    /**
+     * @param string[] $campaign_ids
+     *
+     * @return array
+     * key = campaign_id
+     * value = AdGroup[]
+     */
+    public function getAdGroupsFromCampaigns($campaign_ids) {
+        $fields = Fields::getAdGroupFields();
+
+        $requests = [];
+        foreach ($campaign_ids as $campaign_id) {
+            $requests[] = $this->core->createRequest(array('fields' => $fields), '/'.$campaign_id.'/adgroups', 'get');
+        }
+
+        $campaign_ad_groups = $this->core->batchRequest($requests);
+
+        $result = [];
+        foreach ($campaign_ad_groups as &$ad_groups) {
+            if (count($ad_groups->data) > 0) {
+                $ad_groups = $ad_groups->data;
+                AdGroupFactory::createAdGroups($ad_groups);
+                $result[$ad_groups[0]->campaign_id] = $ad_groups;
+            }
+        }
+
+        foreach ($result as $ad_groups) {
+            $this->pools['adgroup']->addAll($ad_groups);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param int[] $ad_group_ids
+     *
+     * @return AdGroup[]
+     */
+    public function getAdGroups($ad_group_ids) {
+        if (is_array($ad_group_ids)) {
+            $ad_group_ids = array_unique($ad_group_ids);
+        }
+
+        $all_ad_group_ids = $ad_group_ids;
+        $request_ad_group_ids = $this->pools['adgroup']->getNotHasIds($ad_group_ids);
+
+        if (count($request_ad_group_ids) > 0) {
+            $fields = Fields::getAdGroupFields();
+
+            $requests = [];
+            foreach ($request_ad_group_ids as $ad_group_id) {
+                $requests[] = $this->core->createRequest(array('fields' => $fields), '/' . $ad_group_id, 'get');
+            }
+
+            $ad_groups = $this->core->batchRequest($requests);
+            $this->pools['adgroup']->addAll($ad_groups);
+        }
+
+        return $this->pools['adgroup']->getAllExistents($all_ad_group_ids);
     }
 
 }
