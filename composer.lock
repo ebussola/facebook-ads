@@ -3,54 +3,37 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "ecd8027e6707cd1427a271d0203aa6fd",
+    "hash": "111c38406373c26f3853f0917e802e56",
     "packages": [
         {
-            "name": "ebussola/common",
-            "version": "1.0.1",
+            "name": "ebussola/common-pool",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ebussola/common.git",
-                "reference": "443890fec1ec5d7b214ea29c689d723544b9ec04"
+                "url": "https://github.com/ebussola/common-pool.git",
+                "reference": "748a62242f577e55339f4cac2f72db4b17342f42"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ebussola/common/zipball/443890fec1ec5d7b214ea29c689d723544b9ec04",
-                "reference": "443890fec1ec5d7b214ea29c689d723544b9ec04",
+                "url": "https://api.github.com/repos/ebussola/common-pool/zipball/748a62242f577e55339f4cac2f72db4b17342f42",
+                "reference": "748a62242f577e55339f4cac2f72db4b17342f42",
                 "shasum": ""
-            },
-            "require": {
-                "ext-bcmath": "*",
-                "mockery/mockery": "*",
-                "php": ">=5.3.2"
             },
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "ebussola\\common": "src/",
-                    "ebussola\\akelos": "src/"
+                    "ebussola\\common\\pool": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
             "authors": [
                 {
                     "name": "Leonardo Shinagawa",
                     "email": "leonardo@ebussola.com"
                 }
             ],
-            "description": "Common classes including Number, Currency, Date, Enum, ArrayList and more",
-            "keywords": [
-                "arraylist",
-                "currency",
-                "datatype",
-                "datetime",
-                "enum",
-                "period"
-            ],
-            "time": "2013-10-18 14:23:04"
+            "description": "Inspired on Object Pool Pattern",
+            "time": "2013-10-21 15:56:48"
         },
         {
             "name": "ebussola/facebook-core",
@@ -130,59 +113,6 @@
                 "sdk"
             ],
             "time": "2013-01-15 21:37:15"
-        },
-        {
-            "name": "mockery/mockery",
-            "version": "0.8.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/padraic/mockery.git",
-                "reference": "35f0e18022f5538df9df8920a3d96c1761d63220"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/35f0e18022f5538df9df8920a3d96c1761d63220",
-                "reference": "35f0e18022f5538df9df8920a3d96c1761d63220",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.2"
-            },
-            "require-dev": {
-                "hamcrest/hamcrest": "1.1.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Mockery": "library/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Pádraic Brady",
-                    "email": "padraic.brady@gmail.com",
-                    "homepage": "http://blog.astrumfutura.com"
-                }
-            ],
-            "description": "Mockery is a simple yet flexible PHP mock object framework for use in unit testing with PHPUnit, PHPSpec or any other testing framework. Its core goal is to offer a test double framework with a succint API capable of clearly defining all possible object operations and interactions using a human readable Domain Specific Language (DSL). Designed as a drop in alternative to PHPUnit's phpunit-mock-objects library, Mockery is easy to integrate with PHPUnit and can operate alongside phpunit-mock-objects without the World ending.",
-            "homepage": "http://github.com/padraic/mockery",
-            "keywords": [
-                "BDD",
-                "TDD",
-                "library",
-                "mock",
-                "mock objects",
-                "mockery",
-                "stub",
-                "test",
-                "test double",
-                "testing"
-            ],
-            "time": "2013-04-01 12:13:17"
         }
     ],
     "packages-dev": [

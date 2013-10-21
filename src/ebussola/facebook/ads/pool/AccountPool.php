@@ -9,7 +9,7 @@
 namespace ebussola\facebook\ads\pool;
 
 
-use ebussola\common\PoolAbstract;
+use ebussola\common\pool\inmemory\PoolAbstract;
 
 class AccountPool extends PoolAbstract {
 
