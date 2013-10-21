@@ -199,6 +199,7 @@ class Ads {
             }
 
             $ad_groups = $this->core->batchRequest($requests);
+            AdGroupFactory::createAdGroups($ad_groups);
             $this->pools['adgroup']->addAll($ad_groups);
         }
 

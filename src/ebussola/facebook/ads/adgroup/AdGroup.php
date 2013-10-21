@@ -9,6 +9,8 @@
 namespace ebussola\facebook\ads\adgroup;
 
 
+use ebussola\facebook\ads\targeting\Targeting;
+
 class AdGroup implements \ebussola\facebook\ads\AdGroup {
 
     /**
@@ -17,6 +19,9 @@ class AdGroup implements \ebussola\facebook\ads\AdGroup {
     private $adgroup;
 
     public function __construct($adgroup) {
+        $targeting = new Targeting($adgroup->targeting);
+        $adgroup->targeting = $targeting;
+
         $this->adgroup = $adgroup;
     }
 

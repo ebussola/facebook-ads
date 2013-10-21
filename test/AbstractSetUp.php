@@ -23,7 +23,8 @@ abstract class AbstractSetUp extends PHPUnit_Framework_TestCase {
         // instantiating the wrong way to clear the memory
         $pools = array(
             'account' => new \ebussola\facebook\ads\pool\AccountPool(),
-            'campaign' => new \ebussola\facebook\ads\pool\CampaignPool()
+            'campaign' => new \ebussola\facebook\ads\pool\CampaignPool(),
+            'adgroup' => new \ebussola\facebook\ads\pool\AdGroupPool()
         );
         $this->ads = new \ebussola\facebook\ads\Ads($core, $pools);
     }
