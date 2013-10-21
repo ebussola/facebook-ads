@@ -57,4 +57,37 @@ class Ads {
         return $accounts;
     }
 
+    /**
+     * @see https://developers.facebook.com/docs/reference/ads-api/adaccount/
+     *
+     * @param string[] $account_ids
+     *
+     * @return Account[]
+     */
+    public function getAccounts($account_ids) {
+        if (is_array($account_ids)) {
+            $account_ids = array_unique($account_ids);
+        }
+
+        $all_account_ids = $account_ids;
+        $request_account_ids = $this->pools['account']->getNotHasIds($account_ids);
+
+        if (count($request_account_ids) > 0) {
+            $fields = Fields::getAccountFields();
+
+            $requests = [];
+            foreach ($request_account_ids as $account_id) {
+                $requests[] = $this->core->createRequest(array('fields' => $fields), '/' . $account_id, 'get');
+            }
+
+            $accounts = $this->core->batchRequest($requests);
+            $accounts = isset($accounts->data) ? $accounts->data : $accounts;
+            AccountFactory::createAccounts($accounts);
+
+            $this->pools['account']->addAll($accounts);
+        }
+
+        return $this->pools['account']->getAllExistents($all_account_ids);
+    }
+
 }
