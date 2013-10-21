@@ -8,27 +8,13 @@ use ebussola\facebook\ads\account\AccountHelper;
  * Time: 11:43
  */
 
-class AccountTest extends PHPUnit_Framework_TestCase {
-
-    /**
-     * @var \ebussola\facebook\ads\Ads
-     */
-    private $ads;
-
-    public function setUp() {
-        $config = include('config.php');
-        $access_token_data = new AccessTokenData();
-        $access_token_data->setLongAccessToken($config['long_access_token'], 5000);
-
-        $core = new \ebussola\facebook\core\Core($config['app_id'], $config['secret'], $config['redirect_uri'], $access_token_data);
-        $pool = new \ebussola\facebook\ads\pool\AccountPool(); // instantiating the wrong way to clear the memory
-        $this->ads = new \ebussola\facebook\ads\Ads($core, array('account' => $pool));
-    }
+class AccountTest extends AbstractSetUp {
 
     public function testGetAllAccounts() {
         $accounts = $this->ads->getAllAccounts();
         foreach ($accounts as $account) {
             $this->assertInstanceOf('\ebussola\facebook\ads\Account', $account);
+            $this->assertNotNull($account->id);
         }
 
         return $accounts;
@@ -46,6 +32,7 @@ class AccountTest extends PHPUnit_Framework_TestCase {
 
         $this->assertCount(1, $result_accounts);
         $this->assertSame($one_account->id, current($result_accounts)->id);
+        $this->assertInstanceOf('\ebussola\facebook\ads\Account', current($result_accounts));
 
         // Test multiple accounts request
         $account_ids = AccountHelper::extractIds($accounts);

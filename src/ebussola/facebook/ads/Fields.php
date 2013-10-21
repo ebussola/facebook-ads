@@ -24,4 +24,16 @@ class Fields {
         ));
     }
 
+    /**
+     * @return string
+     */
+    static public function getCampaignFields() {
+        $fields = join(',', array(
+            'name', 'account_id', 'campaign_status', 'start_time', 'end_time',
+            'updated_time', 'created_time', 'daily_budget', 'lifetime_budget', 'budget_remaining'
+        ));
+
+        return $fields;
+    }
+
 }

@@ -8,3 +8,4 @@
 
 require_once(__DIR__.'/../vendor/autoload.php');
 require_once(__DIR__.'/../vendor/ebussola/facebook-core/test/stubs/AccessTokenData.php');
+require_once(__DIR__.'/AbstractSetUp.php');

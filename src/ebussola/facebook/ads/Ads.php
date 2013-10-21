@@ -10,7 +10,9 @@ namespace ebussola\facebook\ads;
 
 use ebussola\common\pool\Pool;
 use ebussola\facebook\ads\account\AccountFactory;
+use ebussola\facebook\ads\campaign\CampaignFactory;
 use ebussola\facebook\ads\pool\AccountPool;
+use ebussola\facebook\ads\pool\CampaignPool;
 use ebussola\facebook\core\Core;
 
 class Ads {
@@ -30,13 +32,16 @@ class Ads {
      *
      * @param null | Pool[] $pools
      * ObjectPools for performance improvement
-     * Indexes: account
+     * Indexes: account, campaign
      */
     public function __construct(Core $core, $pools=null) {
         $this->core = $core;
 
         if (!isset($pools['account'])) {
             $pools['account'] = AccountPool::getInstance();
+        }
+        if (!isset($pools['campaign'])) {
+            $pools['campaign'] = CampaignPool::getInstance();
         }
 
         $this->pools = $pools;
@@ -49,7 +54,7 @@ class Ads {
         $fields = Fields::getAccountFields();
 
         $accounts = $this->core->curl(array('fields' => $fields), '/me/adaccounts', 'get');
-        $accounts = isset($accounts->data) ? $accounts->data : $accounts;
+        $accounts = $accounts->data;
         AccountFactory::createAccounts($accounts);
 
         $this->pools['account']->addAll($accounts);
@@ -81,13 +86,57 @@ class Ads {
             }
 
             $accounts = $this->core->batchRequest($requests);
-            $accounts = isset($accounts->data) ? $accounts->data : $accounts;
             AccountFactory::createAccounts($accounts);
 
             $this->pools['account']->addAll($accounts);
         }
 
         return $this->pools['account']->getAllExistents($all_account_ids);
+    }
+
+    /**
+     * @param string $account_id
+     *
+     * @return Campaign[]
+     */
+    public function getCampaignsFromAccount($account_id) {
+        $fields = Fields::getCampaignFields();
+        $result = $this->core->curl(array('fields' => $fields), '/'.$account_id.'/adcampaigns', 'get');
+        $campaigns = $result->data;
+        CampaignFactory::createCampaigns($campaigns);
+
+        $this->pools['campaign']->addAll($campaigns);
+
+        return $campaigns;
+    }
+
+    /**
+     * @param int[] $campaign_ids
+     *
+     * @return Campaign[]
+     */
+    public function getCampaigns($campaign_ids) {
+        if (is_array($campaign_ids)) {
+            $campaign_ids = array_unique($campaign_ids);
+        }
+
+        $all_campaign_ids = $campaign_ids;
+        $request_campaign_ids = $this->pools['campaign']->getNotHasIds($campaign_ids);
+
+        if (count($request_campaign_ids) > 0) {
+            $fields = Fields::getCampaignFields();
+
+            $requests = [];
+            foreach ($request_campaign_ids as $campaign_id) {
+                $requests[] = $this->core->createRequest(array('fields' => $fields), '/' . $campaign_id, 'get');
+            }
+
+            $campaigns = $this->core->batchRequest($requests);
+            CampaignFactory::createCampaigns($campaigns);
+            $this->pools['campaign']->addAll($campaigns);
+        }
+
+        return $this->pools['campaign']->getAllExistents($all_campaign_ids);
     }
 
 }
