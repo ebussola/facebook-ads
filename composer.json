@@ -14,7 +14,7 @@
         }
     },
     "require": {
-        "ebussola/facebook-core": "1.0.3",
+        "ebussola/facebook-core": "1.0.4",
         "ebussola/common-pool": "1.0.0"
     },
     "require-dev": {

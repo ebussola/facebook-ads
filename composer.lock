@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "111c38406373c26f3853f0917e802e56",
+    "hash": "96560e33fb6831c0fc082dfce9692c07",
     "packages": [
         {
             "name": "ebussola/common-pool",
@@ -37,16 +37,16 @@
         },
         {
             "name": "ebussola/facebook-core",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ebussola/facebook-core.git",
-                "reference": "9dc27082cabb3daf047544fbd58db1c221e2edad"
+                "reference": "22600bb78b88621558c0986048f2b0182d1729b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ebussola/facebook-core/zipball/9dc27082cabb3daf047544fbd58db1c221e2edad",
-                "reference": "9dc27082cabb3daf047544fbd58db1c221e2edad",
+                "url": "https://api.github.com/repos/ebussola/facebook-core/zipball/22600bb78b88621558c0986048f2b0182d1729b5",
+                "reference": "22600bb78b88621558c0986048f2b0182d1729b5",
                 "shasum": ""
             },
             "require": {
@@ -69,7 +69,7 @@
                 }
             ],
             "description": "Facebook Core",
-            "time": "2013-10-18 15:29:07"
+            "time": "2013-10-22 12:06:54"
         },
         {
             "name": "facebook/php-sdk",
