@@ -240,4 +240,108 @@ class Ads {
         return $this->pools['creative']->getAllExistents($all_creative_ids);
     }
 
+    /**
+     * @param string      $account_id
+     *
+     * @param array $data_columns
+     *
+     * @param array $filters
+     * @see ReportStatsHelper::createFilter
+     *
+     * @param array $time_ranges
+     * @see ReportStatsHelper::createPeriodTimeRange
+     * @see ReportStatsHelper::createDailyTimeRange
+     *
+     * @return array
+     */
+    public function getSyncReportStats($account_id, array $data_columns, array $filters, array $time_ranges) {
+        $job_id = $this->createAsyncReportStats($account_id, $data_columns, $filters, $time_ranges);
+        while (!$this->isJobCompleted($job_id)) {
+            usleep(rand(1000, 1000000));
+        }
+
+        return $this->getJobResult($account_id, $job_id);
+    }
+
+    /**
+     * @param string $account_id
+     *
+     * @param array  $data_columns
+     *
+     * @param array  $filters
+     * @see ReportStatsHelper::createFilter
+     *
+     * @param array  $time_ranges
+     * @see ReportStatsHelper::createPeriodTimeRange
+     * @see ReportStatsHelper::createDailyTimeRange
+     *
+     * @return string
+     * Job ID
+     *
+     * @throws \Exception
+     */
+    private function createAsyncReportStats($account_id, array $data_columns, array $filters, array $time_ranges) {
+        $account_id = $this->fixAccountId($account_id);
+
+//        foreach ($filters as &$filter) {
+//            $filter = (array)$filter;
+//        }
+
+        $data = array(
+            'async' => true,
+            'time_ranges' => $time_ranges,
+            'data_columns' => $data_columns,
+            'filters' => $filters,
+            'limit' => 999999,
+            'actions_group_by' => array('action_type')
+        );
+
+        $result = $this->core->curl($data, $account_id.'/reportstats', 'post');
+
+        return $result;
+    }
+
+    /**
+     * @param string $job_id
+     *
+     * @return bool
+     */
+    private function isJobCompleted($job_id) {
+        $result = $this->core->curl(array(), '/'.$job_id, 'get');
+
+        return ($result->async_percent_completion == 100 && $result->async_status == 'Job Completed');
+    }
+
+    /**
+     * @param string $job_id
+     *
+     * @return array
+     *
+     * @throws \Exception
+     */
+    private function getJobResult($account_id, $job_id) {
+        $account_id = $this->fixAccountId($account_id);
+
+        $result = $this->core->curl(array('report_run_id' => $job_id), '/'. $account_id.'/reportstats', 'get');
+
+        if (!isset($result->data)) {
+            throw new \Exception('something went wrong :(');
+        }
+
+        return $result->data;
+    }
+
+    /**
+     * @param string $account_id
+     *
+     * @return string
+     */
+    private function fixAccountId($account_id) {
+        if (substr($account_id, 0, 4) != 'act_') {
+            $account_id = 'act_'.$account_id;
+        }
+
+        return $account_id;
+    }
+
 }
