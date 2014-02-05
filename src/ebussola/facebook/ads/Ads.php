@@ -64,6 +64,7 @@ class Ads {
         $fields = Fields::getAccountFields();
 
         $accounts = $this->core->curl(array('fields' => $fields), '/me/adaccounts', 'get');
+        /** @noinspection PhpUndefinedFieldInspection */
         $accounts = $accounts->data;
         AccountFactory::createAccounts($accounts);
 
@@ -112,6 +113,7 @@ class Ads {
     public function getCampaignsFromAccount($account_id) {
         $fields = Fields::getCampaignFields();
         $result = $this->core->curl(array('fields' => $fields), '/'.$account_id.'/adcampaigns', 'get');
+        /** @noinspection PhpUndefinedFieldInspection */
         $campaigns = $result->data;
         CampaignFactory::createCampaigns($campaigns);
 
@@ -283,10 +285,6 @@ class Ads {
     private function createAsyncReportStats($account_id, array $data_columns, array $filters, array $time_ranges) {
         $account_id = $this->fixAccountId($account_id);
 
-//        foreach ($filters as &$filter) {
-//            $filter = (array)$filter;
-//        }
-
         $data = array(
             'async' => true,
             'time_ranges' => $time_ranges,
@@ -309,6 +307,7 @@ class Ads {
     private function isJobCompleted($job_id) {
         $result = $this->core->curl(array(), '/'.$job_id, 'get');
 
+        /** @noinspection PhpUndefinedFieldInspection */
         return ($result->async_percent_completion == 100 && $result->async_status == 'Job Completed');
     }
 

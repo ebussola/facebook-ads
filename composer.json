@@ -14,8 +14,8 @@
         }
     },
     "require": {
-        "ebussola/facebook-core": "1.0.5",
-        "ebussola/common-pool": "1.0.0"
+        "ebussola/facebook-core": "~1.1",
+        "ebussola/common-pool": "~1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.28"

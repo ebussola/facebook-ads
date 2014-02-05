@@ -26,7 +26,7 @@ class AccountTest extends AbstractSetUp {
     public function testGetAccounts($accounts) {
 
         // Test only one acocunt request
-        $one_account = current($accounts);
+        $one_account = reset($accounts);
         $account_id = $one_account->id;
         $result_accounts = $this->ads->getAccounts(array($account_id));
 
