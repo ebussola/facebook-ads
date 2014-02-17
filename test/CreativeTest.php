@@ -11,9 +11,9 @@ class CreativeTest extends AbstractSetUp {
     public function testGetCreatives() {
         $accounts = $this->ads->getAllAccounts();
         $account = $accounts[array_rand($accounts)];
-        $campaigns = $this->ads->getCampaignsFromAccount($account->id);
+        $campaigns = $this->ads->getAdSetsFromAccount($account->id);
         $campaign = $campaigns[array_rand($campaigns)];
-        $campaign_ad_groups = $this->ads->getAdGroupsFromCampaigns(array($campaign->id));
+        $campaign_ad_groups = $this->ads->getAdGroupsFromAdSets(array($campaign->id));
         /** @var \ebussola\facebook\ads\AdGroup[] $ad_groups */
         $ad_groups = $campaign_ad_groups[array_rand($campaign_ad_groups)];
         $ad_group = $ad_groups[array_rand($ad_groups)];

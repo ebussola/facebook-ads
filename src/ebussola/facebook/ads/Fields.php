@@ -27,7 +27,7 @@ class Fields {
     /**
      * @return string
      */
-    static public function getCampaignFields() {
+    static public function getAdSetFields() {
         $fields = join(',', array(
             'name', 'account_id', 'campaign_status', 'start_time', 'end_time',
             'updated_time', 'created_time', 'daily_budget', 'lifetime_budget', 'budget_remaining'
@@ -43,7 +43,7 @@ class Fields {
         $fields = join(',', array(
             'account_id', 'adgroup_status', 'bid_type',
             'bid_info', 'campaign_id', 'conversion_specs', 'created_time', 'creative_ids',
-            'disapprove_reason_descriptions', 'last_updated_by_app_id', 'name', 'targeting',
+            'adgroup_review_feedback', 'name', 'targeting',
             'tracking_specs', 'updated_time', 'view_tags'
         ));
 

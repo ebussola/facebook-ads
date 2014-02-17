@@ -8,10 +8,10 @@
 
 namespace ebussola\facebook\ads\campaign;
 
-class CampaignHelper {
+class AdSetHelper {
 
     /**
-     * @param Campaign[] $campaigns
+     * @param AdSet[] $campaigns
      *
      * @return string[]
      */

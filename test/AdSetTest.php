@@ -6,15 +6,15 @@
  * Time: 15:19
  */
 
-class CampaignTest extends AbstractSetUp {
+class AdSetTest extends AbstractSetUp {
 
-    public function testGetCampaignsFromAccount() {
+    public function testGetAdSetsFromAccount() {
         $accounts = $this->ads->getAllAccounts();
         $account = $accounts[array_rand($accounts)];
 
-        $campaigns = $this->ads->getCampaignsFromAccount($account->id);
+        $campaigns = $this->ads->getAdSetsFromAccount($account->id);
         foreach ($campaigns as $campaign) {
-            $this->assertInstanceOf('\ebussola\facebook\ads\Campaign', $campaign);
+            $this->assertInstanceOf('\ebussola\facebook\ads\AdSet', $campaign);
             $this->assertNotNull($campaign->id);
         }
 
@@ -22,22 +22,22 @@ class CampaignTest extends AbstractSetUp {
     }
 
     /**
-     * @depends testGetCampaignsFromAccount
+     * @depends testGetAdSetsFromAccount
      */
-    public function testGetCampaigns($campaigns) {
+    public function testGetAdSets($campaigns) {
 
         // Test only one campaign request
         $one_campaign = current($campaigns);
         $campaign_id = $one_campaign->id;
-        $result_campaigns = $this->ads->getCampaigns(array($campaign_id));
+        $result_campaigns = $this->ads->getAdSets(array($campaign_id));
 
         $this->assertCount(1, $result_campaigns);
         $this->assertSame($one_campaign->id, current($result_campaigns)->id);
-        $this->assertInstanceOf('\ebussola\facebook\ads\Campaign', current($result_campaigns));
+        $this->assertInstanceOf('\ebussola\facebook\ads\AdSet', current($result_campaigns));
 
         // Test multiple campaigns request
-        $campaign_ids = \ebussola\facebook\ads\campaign\CampaignHelper::extractIds($campaigns);
-        $result_campaigns = $this->ads->getCampaigns($campaign_ids);
+        $campaign_ids = \ebussola\facebook\ads\campaign\AdSetHelper::extractIds($campaigns);
+        $result_campaigns = $this->ads->getAdSets($campaign_ids);
 
         $this->assertSame(count($campaigns), count($result_campaigns));
     }

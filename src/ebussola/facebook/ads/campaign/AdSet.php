@@ -9,7 +9,7 @@
 namespace ebussola\facebook\ads\campaign;
 
 
-class Campaign implements \ebussola\facebook\ads\Campaign {
+class AdSet implements \ebussola\facebook\ads\AdSet {
 
     /**
      * @var \stdClass

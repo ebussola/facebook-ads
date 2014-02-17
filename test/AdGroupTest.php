@@ -11,10 +11,10 @@ class AdGroupTest extends AbstractSetUp {
     public function testGetAdGroupsFromCampaigns() {
         $accounts = $this->ads->getAllAccounts();
         $account = $accounts[array_rand($accounts)];
-        $campaigns = $this->ads->getCampaignsFromAccount($account->id);
+        $campaigns = $this->ads->getAdSetsFromAccount($account->id);
         $campaign = $campaigns[array_rand($campaigns)];
 
-        $ad_groups = $this->ads->getAdGroupsFromCampaigns(array($campaign->id));
+        $ad_groups = $this->ads->getAdGroupsFromAdSets(array($campaign->id));
         $this->assertArrayHasKey($campaign->id, $ad_groups);
         foreach ($ad_groups[$campaign->id] as $ad_group) {
             $this->assertInstanceOf('\ebussola\facebook\ads\AdGroup', $ad_group);

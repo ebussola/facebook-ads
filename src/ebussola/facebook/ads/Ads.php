@@ -11,7 +11,7 @@ namespace ebussola\facebook\ads;
 use ebussola\common\pool\Pool;
 use ebussola\facebook\ads\account\AccountFactory;
 use ebussola\facebook\ads\adgroup\AdGroupFactory;
-use ebussola\facebook\ads\campaign\CampaignFactory;
+use ebussola\facebook\ads\campaign\AdSetFactory;
 use ebussola\facebook\ads\creative\CreativeFactory;
 use ebussola\facebook\ads\pool\AccountPool;
 use ebussola\facebook\ads\pool\AdGroupPool;
@@ -108,14 +108,14 @@ class Ads {
     /**
      * @param string $account_id
      *
-     * @return Campaign[]
+     * @return AdSet[]
      */
-    public function getCampaignsFromAccount($account_id) {
-        $fields = Fields::getCampaignFields();
+    public function getAdSetsFromAccount($account_id) {
+        $fields = Fields::getAdSetFields();
         $result = $this->core->curl(array('fields' => $fields), '/'.$account_id.'/adcampaigns', 'get');
         /** @noinspection PhpUndefinedFieldInspection */
         $campaigns = $result->data;
-        CampaignFactory::createCampaigns($campaigns);
+        AdSetFactory::createAdSets($campaigns);
 
         $this->pools['campaign']->addAll($campaigns);
 
@@ -123,53 +123,53 @@ class Ads {
     }
 
     /**
-     * @param int[] $campaign_ids
+     * @param int[] $adset_ids
      *
-     * @return Campaign[]
+     * @return AdSet[]
      */
-    public function getCampaigns($campaign_ids) {
-        if (is_array($campaign_ids)) {
-            $campaign_ids = array_unique($campaign_ids);
+    public function getAdSets($adset_ids) {
+        if (is_array($adset_ids)) {
+            $adset_ids = array_unique($adset_ids);
         }
 
-        $all_campaign_ids = $campaign_ids;
-        $request_campaign_ids = $this->pools['campaign']->getNotHasIds($campaign_ids);
+        $all_adset_ids = $adset_ids;
+        $request_adset_ids = $this->pools['campaign']->getNotHasIds($adset_ids);
 
-        if (count($request_campaign_ids) > 0) {
-            $fields = Fields::getCampaignFields();
+        if (count($request_adset_ids) > 0) {
+            $fields = Fields::getAdSetFields();
 
             $requests = [];
-            foreach ($request_campaign_ids as $campaign_id) {
-                $requests[] = $this->core->createRequest(array('fields' => $fields), '/' . $campaign_id, 'get');
+            foreach ($request_adset_ids as $adset_id) {
+                $requests[] = $this->core->createRequest(array('fields' => $fields), '/' . $adset_id, 'get');
             }
 
-            $campaigns = $this->core->batchRequest($requests);
-            CampaignFactory::createCampaigns($campaigns);
-            $this->pools['campaign']->addAll($campaigns);
+            $adsets = $this->core->batchRequest($requests);
+            AdSetFactory::createAdSets($adsets);
+            $this->pools['campaign']->addAll($adsets);
         }
 
-        return $this->pools['campaign']->getAllExistents($all_campaign_ids);
+        return $this->pools['campaign']->getAllExistents($all_adset_ids);
     }
 
     /**
-     * @param string[] $campaign_ids
+     * @param string[] $adset_ids
      *
      * @return array
      * key = campaign_id
      * value = AdGroup[]
      */
-    public function getAdGroupsFromCampaigns($campaign_ids) {
+    public function getAdGroupsFromAdSets($adset_ids) {
         $fields = Fields::getAdGroupFields();
 
         $requests = [];
-        foreach ($campaign_ids as $campaign_id) {
-            $requests[] = $this->core->createRequest(array('fields' => $fields), '/'.$campaign_id.'/adgroups', 'get');
+        foreach ($adset_ids as $adset_id) {
+            $requests[] = $this->core->createRequest(array('fields' => $fields), '/'.$adset_id.'/adgroups', 'get');
         }
 
-        $campaign_ad_groups = $this->core->batchRequest($requests);
+        $adset_ad_groups = $this->core->batchRequest($requests);
 
         $result = [];
-        foreach ($campaign_ad_groups as &$ad_groups) {
+        foreach ($adset_ad_groups as &$ad_groups) {
             if (count($ad_groups->data) > 0) {
                 $ad_groups = $ad_groups->data;
                 AdGroupFactory::createAdGroups($ad_groups);
