@@ -6,7 +6,7 @@
  * Time: 14:32
  */
 
-namespace ebussola\facebook\ads\campaign;
+namespace ebussola\facebook\ads\adset;
 
 class AdSetHelper {
 

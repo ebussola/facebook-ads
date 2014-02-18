@@ -6,7 +6,7 @@
  * Time: 11:31
  */
 
-namespace ebussola\facebook\ads\campaign;
+namespace ebussola\facebook\ads\adset;
 
 
 class AdSet implements \ebussola\facebook\ads\AdSet {

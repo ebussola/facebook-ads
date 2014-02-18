@@ -15,7 +15,7 @@ class NewStructureTest extends AbstractSetUp {
             $this->assertInstanceOf('\ebussola\facebook\ads\AdSet', $adset);
         }
 
-        $adset_ids = \ebussola\facebook\ads\campaign\AdSetHelper::extractIds($adsets);
+        $adset_ids = \ebussola\facebook\ads\adset\AdSetHelper::extractIds($adsets);
         $adset_adgroups = $this->ads->getAdGroupsFromAdSets($adset_ids);
         foreach ($adset_adgroups as $adgroups) {
             foreach ($adgroups as $adgroup) {

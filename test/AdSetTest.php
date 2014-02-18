@@ -12,34 +12,34 @@ class AdSetTest extends AbstractSetUp {
         $accounts = $this->ads->getAllAccounts();
         $account = $accounts[array_rand($accounts)];
 
-        $campaigns = $this->ads->getAdSetsFromAccount($account->id);
-        foreach ($campaigns as $campaign) {
-            $this->assertInstanceOf('\ebussola\facebook\ads\AdSet', $campaign);
-            $this->assertNotNull($campaign->id);
+        $adsets = $this->ads->getAdSetsFromAccount($account->id);
+        foreach ($adsets as $adset) {
+            $this->assertInstanceOf('\ebussola\facebook\ads\AdSet', $adset);
+            $this->assertNotNull($adset->id);
         }
 
-        return $campaigns;
+        return $adsets;
     }
 
     /**
      * @depends testGetAdSetsFromAccount
      */
-    public function testGetAdSets($campaigns) {
+    public function testGetAdSets($adsets) {
 
         // Test only one campaign request
-        $one_campaign = current($campaigns);
-        $campaign_id = $one_campaign->id;
-        $result_campaigns = $this->ads->getAdSets(array($campaign_id));
+        $one_adset = current($adsets);
+        $adset_id = $one_adset->id;
+        $result_adsets = $this->ads->getAdSets(array($adset_id));
 
-        $this->assertCount(1, $result_campaigns);
-        $this->assertSame($one_campaign->id, current($result_campaigns)->id);
-        $this->assertInstanceOf('\ebussola\facebook\ads\AdSet', current($result_campaigns));
+        $this->assertCount(1, $result_adsets);
+        $this->assertSame($one_adset->id, current($result_adsets)->id);
+        $this->assertInstanceOf('\ebussola\facebook\ads\AdSet', current($result_adsets));
 
         // Test multiple campaigns request
-        $campaign_ids = \ebussola\facebook\ads\campaign\AdSetHelper::extractIds($campaigns);
-        $result_campaigns = $this->ads->getAdSets($campaign_ids);
+        $adset_ids = \ebussola\facebook\ads\adset\AdSetHelper::extractIds($adsets);
+        $result_adsets = $this->ads->getAdSets($adset_ids);
 
-        $this->assertSame(count($campaigns), count($result_campaigns));
+        $this->assertSame(count($adsets), count($result_adsets));
     }
 
 }

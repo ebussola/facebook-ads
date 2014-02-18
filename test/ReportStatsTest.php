@@ -13,7 +13,7 @@ class ReportStatsTest extends AbstractSetUp {
         $account = $accounts[array_rand($accounts)];
 
         $campaigns = $this->ads->getAdSetsFromAccount($account->id);
-        $campaign_ids = \ebussola\facebook\ads\campaign\AdSetHelper::extractIds($campaigns);
+        $campaign_ids = \ebussola\facebook\ads\adset\AdSetHelper::extractIds($campaigns);
 
         $data_columns = array('campaign_id', 'campaign_name', 'impressions', 'clicks', 'social_impressions',
             'social_clicks', 'unique_impressions', 'unique_clicks', 'unique_social_impressions',

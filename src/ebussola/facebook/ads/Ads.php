@@ -11,7 +11,7 @@ namespace ebussola\facebook\ads;
 use ebussola\common\pool\Pool;
 use ebussola\facebook\ads\account\AccountFactory;
 use ebussola\facebook\ads\adgroup\AdGroupFactory;
-use ebussola\facebook\ads\campaign\AdSetFactory;
+use ebussola\facebook\ads\adset\AdSetFactory;
 use ebussola\facebook\ads\creative\CreativeFactory;
 use ebussola\facebook\ads\pool\AccountPool;
 use ebussola\facebook\ads\pool\AdGroupPool;
@@ -114,12 +114,35 @@ class Ads {
         $fields = Fields::getAdSetFields();
         $result = $this->core->curl(array('fields' => $fields), '/'.$account_id.'/adcampaigns', 'get');
         /** @noinspection PhpUndefinedFieldInspection */
-        $campaigns = $result->data;
-        AdSetFactory::createAdSets($campaigns);
+        $adsets = $result->data;
+        AdSetFactory::createAdSets($adsets);
 
-        $this->pools['campaign']->addAll($campaigns);
+        $this->pools['campaign']->addAll($adsets);
 
-        return $campaigns;
+        return $adsets;
+    }
+
+    /**
+     * @param int[] $campaign_ids
+     *
+     * @return AdSet[]
+     */
+    public function getAdSetsFromAdCampaigns($campaign_ids) {
+        $fields = Fields::getAdSetFields();
+
+        $requests = array();
+        foreach ($campaign_ids as $campaign_id) {
+            $requests[] = $this->core->createRequest(array('fields' => $fields), '/'.$campaign_id.'/adcampaigns', 'get');
+        }
+        $result = $this->core->batchRequest($requests);
+
+        /** @noinspection PhpUndefinedFieldInspection */
+        $adsets = $result->data;
+        AdSetFactory::createAdSets($adsets);
+
+        $this->pools['campaign']->addAll($adsets);
+
+        return $adsets;
     }
 
     /**

@@ -6,7 +6,7 @@
  * Time: 11:34
  */
 
-namespace ebussola\facebook\ads\campaign;
+namespace ebussola\facebook\ads\adset;
 
 class AdSetFactory {
 
