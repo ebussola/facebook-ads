@@ -129,6 +129,32 @@ class Ads {
     }
 
     /**
+     * @param string[] $adcampaign_ids
+     *
+     * @return AdCampaign[]
+     */
+    public function getAdCampaigns(array $adcampaign_ids) {
+        $adcampaign_ids = array_unique($adcampaign_ids);
+
+        $all_adcampaign_ids = $adcampaign_ids;
+        $adcampaign_ids = $this->pools['ad_campaign']->getNotHasIds($adcampaign_ids);
+
+        if (count($adcampaign_ids) > 0) {
+            $fields = Fields::getAdCampaignFields();
+
+            $requests = array();
+            foreach ($adcampaign_ids as $adcampaign_id) {
+                $requests[] = $this->core->createRequest(array('fields' => $fields), '/' . $adcampaign_id, 'get');
+            }
+            $adcampaigns = $this->core->batchRequest($requests);
+            AdCampaignFactory::createAdCampaigns($adcampaigns);
+            $this->pools['ad_campaign']->addAll($adcampaigns);
+        }
+
+        return $this->pools['ad_campaign']->getAllExistents($all_adcampaign_ids);
+    }
+
+    /**
      * @param string $account_id
      *
      * @return AdSet[]

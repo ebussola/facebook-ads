@@ -28,6 +28,26 @@ class AdCampaignTest extends AbstractSetUp {
             $this->assertNotNull($adcampaign->name);
             $this->assertNotNull($adcampaign->objective);
         }
+
+        return $adcampaigns;
+    }
+
+    /**
+     * @depends testGetAdCampaignsFromAccount
+     */
+    public function testGetAdCampaigns($adcampaigns) {
+        $adcampaign_ids = \ebussola\facebook\ads\adcampaign\AdCampaignHelper::extractIds($adcampaigns);
+
+        $adcampaigns = $this->ads->getAdCampaigns($adcampaign_ids);
+        $this->assertCount(count($adcampaign_ids), $adcampaigns);
+        foreach ($adcampaigns as $adcampaign) {
+            $this->assertInstanceOf('\ebussola\facebook\ads\AdCampaign', $adcampaign);
+            $this->assertNotNull($adcampaign->id);
+            $this->assertNotNull($adcampaign->account_id);
+            $this->assertNotNull($adcampaign->campaign_group_status);
+            $this->assertNotNull($adcampaign->name);
+            $this->assertNotNull($adcampaign->objective);
+        }
     }
 
 }
