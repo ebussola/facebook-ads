@@ -10,12 +10,15 @@ namespace ebussola\facebook\ads;
 
 use ebussola\common\pool\Pool;
 use ebussola\facebook\ads\account\AccountFactory;
+use ebussola\facebook\ads\adcampaign\AdCampaign;
+use ebussola\facebook\ads\adcampaign\AdCampaignFactory;
 use ebussola\facebook\ads\adgroup\AdGroupFactory;
 use ebussola\facebook\ads\adset\AdSetFactory;
 use ebussola\facebook\ads\creative\CreativeFactory;
 use ebussola\facebook\ads\pool\AccountPool;
+use ebussola\facebook\ads\pool\AdCampaignPool;
 use ebussola\facebook\ads\pool\AdGroupPool;
-use ebussola\facebook\ads\pool\CampaignPool;
+use ebussola\facebook\ads\pool\AdSetPool;
 use ebussola\facebook\ads\pool\CreativePool;
 use ebussola\facebook\core\Core;
 
@@ -44,14 +47,17 @@ class Ads {
         if (!isset($pools['account'])) {
             $pools['account'] = AccountPool::getInstance();
         }
-        if (!isset($pools['campaign'])) {
-            $pools['campaign'] = CampaignPool::getInstance();
+        if (!isset($pools['adset'])) {
+            $pools['adset'] = AdSetPool::getInstance();
         }
         if (!isset($pools['adgroup'])) {
             $pools['adgroup'] = AdGroupPool::getInstance();
         }
         if (!isset($pools['creative'])) {
             $pools['creative'] = CreativePool::getInstance();
+        }
+        if (!isset($pools['ad_campaign'])) {
+            $pools['ad_campaign'] = AdCampaignPool::getInstance();
         }
 
         $this->pools = $pools;
@@ -108,6 +114,23 @@ class Ads {
     /**
      * @param string $account_id
      *
+     * @return AdCampaign[]
+     */
+    public function getAdCampaignsFromAccount($account_id) {
+        $fields = Fields::getAdCampaignFields();
+        $result = $this->core->curl(array('fields' => $fields), '/'.$account_id.'/adcampaign_groups', 'get');
+        /** @noinspection PhpUndefinedFieldInspection */
+        $adcampaigns = $result->data;
+        AdCampaignFactory::createAdCampaigns($adcampaigns);
+        
+        $this->pools['ad_campaign']->addAll($adcampaigns);
+        
+        return $adcampaigns;
+    }
+
+    /**
+     * @param string $account_id
+     *
      * @return AdSet[]
      */
     public function getAdSetsFromAccount($account_id) {
@@ -117,7 +140,7 @@ class Ads {
         $adsets = $result->data;
         AdSetFactory::createAdSets($adsets);
 
-        $this->pools['campaign']->addAll($adsets);
+        $this->pools['adset']->addAll($adsets);
 
         return $adsets;
     }
@@ -134,15 +157,22 @@ class Ads {
         foreach ($campaign_ids as $campaign_id) {
             $requests[] = $this->core->createRequest(array('fields' => $fields), '/'.$campaign_id.'/adcampaigns', 'get');
         }
-        $result = $this->core->batchRequest($requests);
+        $campaign_adsets = $this->core->batchRequest($requests);
 
-        /** @noinspection PhpUndefinedFieldInspection */
-        $adsets = $result->data;
-        AdSetFactory::createAdSets($adsets);
+        $result = [];
+        foreach ($campaign_adsets as &$adsets) {
+            if (count($adsets->data) > 0) {
+                $adsets = $adsets->data;
+                AdSetFactory::createAdSets($adsets);
+                $result[$adsets[0]->campaign_group_id] = $adsets;
+            }
+        }
 
-        $this->pools['campaign']->addAll($adsets);
+        foreach ($result as $adsets) {
+            $this->pools['adset']->addAll($adsets);
+        }
 
-        return $adsets;
+        return $result;
     }
 
     /**
@@ -156,7 +186,7 @@ class Ads {
         }
 
         $all_adset_ids = $adset_ids;
-        $request_adset_ids = $this->pools['campaign']->getNotHasIds($adset_ids);
+        $request_adset_ids = $this->pools['adset']->getNotHasIds($adset_ids);
 
         if (count($request_adset_ids) > 0) {
             $fields = Fields::getAdSetFields();
@@ -168,10 +198,10 @@ class Ads {
 
             $adsets = $this->core->batchRequest($requests);
             AdSetFactory::createAdSets($adsets);
-            $this->pools['campaign']->addAll($adsets);
+            $this->pools['adset']->addAll($adsets);
         }
 
-        return $this->pools['campaign']->getAllExistents($all_adset_ids);
+        return $this->pools['adset']->getAllExistents($all_adset_ids);
     }
 
     /**

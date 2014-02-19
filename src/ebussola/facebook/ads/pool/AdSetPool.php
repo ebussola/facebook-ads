@@ -11,7 +11,7 @@ namespace ebussola\facebook\ads\pool;
 
 use ebussola\common\pool\inmemory\PoolAbstract;
 
-class CampaignPool extends PoolAbstract {
+class AdSetPool extends PoolAbstract {
 
     /**
      * @param $object

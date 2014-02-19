@@ -22,10 +22,11 @@ abstract class AbstractSetUp extends PHPUnit_Framework_TestCase {
 
         // instantiating the wrong way to clear the memory
         $pools = array(
-            'account' => new \ebussola\facebook\ads\pool\AccountPool(),
-            'campaign' => new \ebussola\facebook\ads\pool\CampaignPool(),
-            'adgroup' => new \ebussola\facebook\ads\pool\AdGroupPool(),
-            'creative' => new \ebussola\facebook\ads\pool\CreativePool()
+            'account'     => new \ebussola\facebook\ads\pool\AccountPool(),
+            'ad_campaign' => new \ebussola\facebook\ads\pool\AdCampaignPool(),
+            'adset'       => new \ebussola\facebook\ads\pool\AdSetPool(),
+            'adgroup'     => new \ebussola\facebook\ads\pool\AdGroupPool(),
+            'creative'    => new \ebussola\facebook\ads\pool\CreativePool()
         );
         $this->ads = new \ebussola\facebook\ads\Ads($core, $pools);
     }

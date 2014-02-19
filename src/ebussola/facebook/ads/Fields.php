@@ -29,7 +29,7 @@ class Fields {
      */
     static public function getAdSetFields() {
         $fields = join(',', array(
-            'name', 'account_id', 'campaign_status', 'start_time', 'end_time',
+            'name', 'account_id', 'campaign_group_id', 'campaign_status', 'start_time', 'end_time',
             'updated_time', 'created_time', 'daily_budget', 'lifetime_budget', 'budget_remaining'
         ));
 
@@ -58,6 +58,17 @@ class Fields {
             'name', 'type', 'object_id', 'body', 'image_hash',
             'image_url', 'title', 'link_url', 'url_tags', 'preview_url',
             'related_fan_page', 'auto_update', 'story_id', 'action_spec'
+        ));
+
+        return $fields;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getAdCampaignFields() {
+        $fields = join(',', array(
+            'account_id', 'objective', 'name', 'campaign_group_status'
         ));
 
         return $fields;
