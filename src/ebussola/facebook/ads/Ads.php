@@ -322,6 +322,56 @@ class Ads {
     }
 
     /**
+     * @param string    $account_id
+     * @param array     $data_columns
+     * @param array     $filters
+     * @param \DateTime $start_date
+     * @param \DateTime $end_date
+     *
+     * @return array
+     */
+    public function getReportStats($account_id, array $data_columns, array $filters, \DateTime $start_date,
+                                   \DateTime $end_date) {
+
+        $account_id = $this->fixAccountId($account_id);
+
+        $this->fixTimezone($account_id, $start_date);
+        $this->fixTimezone($account_id, $end_date);
+        $end_date = clone $end_date;
+        $end_date->add(new \DateInterval('P1D'));
+
+        $time_ranges = ReportStatsHelper::createPeriodTimeRange($start_date, $end_date);
+
+        return $this->getSyncReportStats($account_id, $data_columns, $filters, $time_ranges);
+    }
+
+    /**
+     * @param string    $account_id
+     * @param array     $data_columns
+     * @param array     $filters
+     * @param \DateTime $start_date
+     * @param \DateTime $end_date
+     *
+     * @see ReportStatsHelper::createFilter
+     *
+     * @return array
+     */
+    public function getDailyReportStats($account_id, array $data_columns, array $filters, \DateTime $start_date,
+                                        \DateTime $end_date) {
+
+        $account_id = $this->fixAccountId($account_id);
+
+        $this->fixTimezone($account_id, $start_date);
+        $this->fixTimezone($account_id, $end_date);
+        $end_date = clone $end_date;
+        $end_date->add(new \DateInterval('P1D'));
+
+        $time_ranges = ReportStatsHelper::createDailyTimeRange($start_date, $end_date);
+
+        return $this->getSyncReportStats($account_id, $data_columns, $filters, $time_ranges);
+    }
+
+    /**
      * @param string      $account_id
      *
      * @param array $data_columns
@@ -342,6 +392,18 @@ class Ads {
         }
 
         return $this->getJobResult($account_id, $job_id);
+    }
+
+    /**
+     * Fix timezone according to account configuration
+     *
+     * @param string   $account_id
+     * @param \DateTime $date_time
+     */
+    public function fixTimezone($account_id, \DateTime $date_time) {
+        /** @var Account $account */
+        $account = reset($this->getAccounts(array($account_id)));
+        $date_time->setTimezone(new \DateTimeZone($account->timezone_name));
     }
 
     /**
