@@ -20,7 +20,7 @@ class AdSet implements \ebussola\facebook\ads\AdSet {
         $this->campaign = $campaign;
     }
 
-    public function __get($name) {
+    public function &__get($name) {
         return $this->campaign->{$name};
     }
 

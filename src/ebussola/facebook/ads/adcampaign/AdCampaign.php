@@ -17,7 +17,7 @@ class AdCampaign implements \ebussola\facebook\ads\AdCampaign {
         $this->adcampaign = $adcampaign;
     }
 
-    public function __get($name) {
+    public function &__get($name) {
         return $this->adcampaign->{$name};
     }
 

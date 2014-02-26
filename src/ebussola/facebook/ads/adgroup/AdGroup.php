@@ -25,7 +25,7 @@ class AdGroup implements \ebussola\facebook\ads\AdGroup {
         $this->adgroup = $adgroup;
     }
 
-    public function __get($name) {
+    public function &__get($name) {
         return $this->adgroup->{$name};
     }
 

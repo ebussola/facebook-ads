@@ -20,7 +20,7 @@ class Creative implements \ebussola\facebook\ads\Creative {
         $this->creative = $creative;
     }
 
-    public function __get($name) {
+    public function &__get($name) {
         return $this->creative->{$name};
     }
 

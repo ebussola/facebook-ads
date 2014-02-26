@@ -20,7 +20,7 @@ class Account implements \ebussola\facebook\ads\Account {
         $this->account = $account;
     }
 
-    public function __get($name) {
+    public function &__get($name) {
         return $this->account->{$name};
     }
 
