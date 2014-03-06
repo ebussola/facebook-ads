@@ -462,7 +462,11 @@ class Ads {
     private function getJobResult($account_id, $job_id) {
         $account_id = $this->fixAccountId($account_id);
 
-        $result = $this->core->curl(array('report_run_id' => $job_id), '/'. $account_id.'/reportstats', 'get');
+        $data = array(
+            'report_run_id' => $job_id,
+            'limit' => 5000
+        );
+        $result = $this->core->curl($data, '/'. $account_id.'/reportstats', 'get');
 
         if (!isset($result->data)) {
             throw new \Exception('something went wrong :(');
